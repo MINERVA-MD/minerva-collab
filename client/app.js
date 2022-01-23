@@ -2,7 +2,7 @@ const editor = document.getElementById("editor");
 const send = document.getElementById("send");
 const roomEl = document.getElementById("roomId");
 
-const socket = io("http://localhost:8080/");
+const socket = io("http://192.168.1.81:8080/");
 const roomId = "3265";
 roomEl.innerHTML = "room id: " + roomId;
 
@@ -32,15 +32,18 @@ editor.addEventListener("keydown", (e) => {
 });
 
 editor.addEventListener("keydown", (e) => {
-    console.log(e.key)
-    if (editor.selectionStart === editor.selectionEnd && e.key === "Backspace") {
-        socket.emit("delete", editor.selectionStart)
+    console.log(e.key);
+    if (
+        editor.selectionStart === editor.selectionEnd &&
+        e.key === "Backspace"
+    ) {
+        socket.emit("delete", editor.selectionStart);
     }
-})
+});
 
 socket.on("update", (data) => {
     editor.value = data;
-    console.log('update  ' + data)
+    console.log("update  " + data);
 });
 
 socket.on("welcome", (msg) => {
