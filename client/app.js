@@ -24,6 +24,7 @@ editor.addEventListener("click", () => {
 //     socket.emit("update", data);
 // });
 
+// positional solution (theoretically scales bette)
 editor.addEventListener("keypress", (e) => {
     if (editor.selectionStart == editor.selectionEnd && e.key.length == 1) {
         socket.emit("insert", { pos: editor.selectionStart, char: e.key });
