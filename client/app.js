@@ -25,14 +25,22 @@ editor.addEventListener("click", () => {
 // });
 
 // positional solution (theoretically scales bette)
-editor.addEventListener("keypress", (e) => {
-    if (editor.selectionStart == editor.selectionEnd && e.key.length == 1) {
+editor.addEventListener("keydown", (e) => {
+    if (editor.selectionStart === editor.selectionEnd && e.key.length == 1) {
         socket.emit("insert", { pos: editor.selectionStart, char: e.key });
     }
 });
 
+editor.addEventListener("keydown", (e) => {
+    console.log(e.key)
+    if (editor.selectionStart === editor.selectionEnd && e.key === "Backspace") {
+        socket.emit("delete", editor.selectionStart)
+    }
+})
+
 socket.on("update", (data) => {
     editor.value = data;
+    console.log('update  ' + data)
 });
 
 socket.on("welcome", (msg) => {
