@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+
+        <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+        <script src="./app.js" defer></script>
+    </head>
+
+    <body>
+        <div id="roomId"></div>
+        <div style="height: 95vh; margin: 0px">
+            <textarea
+                style="
+                    font-size: 1.2rem;
+                    resize: none;
+                    width: 100%;
+                    height: 100%;
+                    box-sizing: border-box;
+                "
+                name="editor"
+                id="editor"
+            ></textarea>
+        </div>
+    </body>
+</html>
