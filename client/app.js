@@ -47,7 +47,10 @@ editor.addEventListener("keydown", (e) => {
 });
 
 socket.on("update", (data) => {
+    const { selectionStart, selectionEnd } = editor;
     editor.value = data;
+    editor.selectionStart = selectionStart;
+    editor.selectionEnd = selectionEnd;
     console.log("update  " + data);
 });
 
