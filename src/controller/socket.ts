@@ -31,11 +31,11 @@ export default function socket(io: {
       // Position/Byte solution
       socket.on("insert", ({ pos, char }) => {
         const data = insertChar(pos, char);
-        io.in(roomId).emit("update", data);
+        socket.in(roomId).emit("update", data);
       });
       socket.on("delete", (pos) => {
         const data = deleteChar(pos);
-        io.in(roomId).emit("update", data);
+        socket.in(roomId).emit("update", data);
       });
     });
   });
