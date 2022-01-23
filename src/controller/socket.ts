@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import http from "http";
+import { insertChar, deleteChar } from "../models/contentModel";
 
 export default function socket(io: http.Server) {
     io.on("connection", (socket: Socket) => {
@@ -10,7 +10,14 @@ export default function socket(io: http.Server) {
             socket.join(roomId);
             socket.emit("joined", `joined room ${roomId}`);
 
+            // Naive
             socket.on("update", (data) => {
+                socket.in(roomId).emit("update", data);
+            });
+
+            // Byte insert
+            socket.on("insert", ({ pos, char }) => {
+                const data = insertChar(pos, char);
                 socket.in(roomId).emit("update", data);
             });
         });
