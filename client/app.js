@@ -38,6 +38,11 @@ editor.addEventListener("keydown", (e) => {
         e.key === "Backspace"
     ) {
         socket.emit("delete", editor.selectionStart);
+    } else if (
+        editor.selectionStart === editor.selectionEnd &&
+        e.key === "Enter"
+    ) {
+        socket.emit("insert", { pos: editor.selectionStart, char: "\n" });
     }
 });
 
