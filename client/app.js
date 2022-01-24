@@ -26,7 +26,7 @@ function getDiff(prev, curr) {
         curr.substring();
     }
 }
-
+console.log(Diff);
 editor.addEventListener("click", () => {
     if (editor.selectionStart == editor.selectionEnd) {
         //console.log(editor.selectionStart);
