@@ -1,4 +1,3 @@
-const editor = document.getElementById("editor");
 const send = document.getElementById("send");
 const roomEl = document.getElementById("roomId");
 
@@ -16,11 +15,20 @@ function getDiff(prev, curr) {
     console.log(diff);
 }
 
+// codemirror
+var codeMirror = CodeMirror(document.body, {
+    lineWrapping: true,
+    lineNumbers: true,
+    value: "",
+    mode: "markdown",
+});
+
 let data = "";
 
-editor.addEventListener("input", (e) => {
-    getDiff(data, e.currentTarget.value);
-    data = e.currentTarget.value;
+codeMirror.on("change", () => {
+    curr = codeMirror.getValue();
+    getDiff(data, curr);
+    data = codeMirror.getValue();
 });
 
 socket.on("update", ({ data, shift }) => {
