@@ -1,17 +1,19 @@
 import { text } from "express";
-import { CodeMirrorDelta } from "../types/CodeMirrorDelta";
+import { CodeMirrorOps } from "../types/CodeMirrorDelta";
 
-let textData: string[];
+let textData: Array<string[]> = [[""]];
 
-export default function parseChanges(ch: CodeMirrorDelta) {
-  switch (ch.origin) {
-    case "+input":
+export default function parseChanges(ch: CodeMirrorOps) {
+    switch (ch.origin) {
+        case "+input":
+            let lineNum = ch.from.line;
+            console.log(ch.removed.length);
 
-    case "+delete":
+        case "+delete":
 
-    case "paste":
+        case "paste":
 
-    default:
-      break;
-  }
+        default:
+            break;
+    }
 }

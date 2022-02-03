@@ -22,7 +22,8 @@ let data = "";
 
 codeMirror.on("changes", (e, ch) => {
     console.log(ch[0]);
-    socket.emit('clientUpdate', ch[0]);
+    const ops = ch[0];
+    socket.emit("clientUpdate", { ops });
 });
 
 // needs to be rewritten
