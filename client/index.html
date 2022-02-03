@@ -7,24 +7,28 @@
         <title>Document</title>
         <script
             type="module"
-            src="https://unpkg.com/diff@5.0.0/dist/diff.js"
-        ></script>
-        <script
-            type="module"
             src="./codemirror-5.65.1//lib/codemirror.js"
         ></script>
         <link rel="stylesheet" href="./codemirror-5.65.1/lib/codemirror.css" />
+        <link rel="stylesheet" href="./style.css" />
         <script
             type="module"
             src="./codemirror-5.65.1/mode/markdown/markdown.js"
         ></script>
+        <script type="module" src="./codemirror-5.65.1/keymap/vim.js"></script>
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <script src="./app.js" defer></script>
     </head>
 
     <body>
         <h3>I'm a 🌮</h3>
-        <div id="roomId"></div>
+        <div style="display: flex; justify-content: space-between">
+            <div id="roomId"></div>
+            <div>
+                <label for="toggleVim">Toggle Vim Mode</label>
+                <input type="checkbox" id="toggleVim" value="vim" />
+            </div>
+        </div>
         <!-- <div style="height: 85vh; margin: 0px">
             <textarea
                 style="

@@ -14,8 +14,7 @@ export default function socket(io: Server) {
 
             // Position/Byte solution
             socket.on("clientUpdate", (changes: { ops: CodeMirrorOps }) => {
-                console.log();
-                //    parseChanges(changes.ops);
+                parseChanges(changes.ops);
             });
         });
     });
