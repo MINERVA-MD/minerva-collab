@@ -25,10 +25,11 @@ var codeMirror = CodeMirror(document.body, {
 
 let data = "";
 
-codeMirror.on("change", () => {
-    curr = codeMirror.getValue();
-    getDiff(data, curr);
-    data = codeMirror.getValue();
+codeMirror.on("changes", (e, ch) => {
+    // curr = codeMirror.getValue();
+    // getDiff(data, curr);
+    // data = codeMirror.getValue();
+    console.log(ch);
 });
 
 socket.on("update", ({ data, shift }) => {
