@@ -10,12 +10,7 @@ socket.on("joined", (msg) => {
     console.log(msg);
 });
 
-function getDiff(prev, curr) {
-    const diff = Diff.diffChars(prev, curr);
-    console.log(diff);
-}
-
-// codemirror
+// codemirror config
 var codeMirror = CodeMirror(document.body, {
     lineWrapping: true,
     lineNumbers: true,
@@ -26,12 +21,11 @@ var codeMirror = CodeMirror(document.body, {
 let data = "";
 
 codeMirror.on("changes", (e, ch) => {
-    // curr = codeMirror.getValue();
-    // getDiff(data, curr);
-    // data = codeMirror.getValue();
-    console.log(ch);
+    console.log(ch[0]);
+    socket.emit('clientUpdate', ch[0]);
 });
 
+// needs to be rewritten
 socket.on("update", ({ data, shift }) => {
     const { selectionStart, selectionEnd } = editor;
     editor.value = data;

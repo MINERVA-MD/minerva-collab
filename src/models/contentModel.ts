@@ -1,20 +1,17 @@
 import { text } from "express";
+import { CodeMirrorDelta } from "../types/CodeMirrorDelta";
 
 let textData: string[];
 
-export function insertChar(position: number, character: string) {
-  if (textData) {
-    textData.splice(position, 0, character);
-  } else {
-    textData = [character];
-  }
-  return textData.join("");
-}
+export default function parseChanges(ch: CodeMirrorDelta) {
+  switch (ch.origin) {
+    case "+input":
 
-export function deleteChar(position: number) {
-  if (textData && textData.length !== 0) {
-    textData.splice(position - 1, 1);
-    return textData.join("");
+    case "+delete":
+
+    case "paste":
+
+    default:
+      break;
   }
-  return textData;
 }
