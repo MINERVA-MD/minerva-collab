@@ -61,4 +61,8 @@ function remove(
     console.log(content);
 }
 
+export function setTextData(data: string) {
+    textData = [data.split("\n")];
+}
+
 export { textData };

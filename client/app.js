@@ -1,4 +1,5 @@
 const send = document.getElementById("send");
+const github = document.getElementById("github");
 const roomEl = document.getElementById("roomId");
 const vim = document.getElementById("toggleVim");
 
@@ -24,6 +25,7 @@ var codeMirror = CodeMirror(document.body, {
 let data = "";
 
 codeMirror.on("changes", (e, ch) => {
+    // prevent changes from triggering on content update
     if (ch[0].origin === undefined || ch[0].origin === "setValue") {
         return;
     } else {
@@ -42,10 +44,18 @@ vim.addEventListener("change", (e) => {
     }
 });
 
+// fetch github content
+github.addEventListener("click", () => {
+    socket.emit("loadGithub");
+});
+
 // socket connection
-socket.on("serverUpdate", (data) => {
-    console.log(data);
+socket.on("serverOpUpdate", (data) => {
     codeMirror.replaceRange(data.text, data.from, data.to);
+});
+
+socket.on("serverContentUpdate", (data) => {
+    codeMirror.setValue(data.join("\n"));
 });
 
 socket.on("welcome", (msg) => {

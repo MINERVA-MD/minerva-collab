@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
-import parseChanges, { textData } from "../models/contentModel";
+import parseChanges, { setTextData, textData } from "../models/contentModel";
 import { CodeMirrorOps } from "../types/CodeMirrorDelta";
+import getBodyData from "./github";
 
 export default function socket(io: Server) {
     io.on("connection", (socket: Socket) => {
@@ -13,10 +14,19 @@ export default function socket(io: Server) {
                 msg: `joined room ${roomId}`,
             });
 
+            // on loading github repo data
+            socket.on("loadGithub", async () => {
+                const data: string = await getBodyData(
+                    "https://raw.githubusercontent.com/iflinda/iflinda-test/main/README.md"
+                );
+                setTextData(data);
+                io.to(roomId).emit("serverContentUpdate", textData);
+            });
+
             // Position/Byte solution
             socket.on("clientUpdate", (changes: { ops: CodeMirrorOps }) => {
                 parseChanges(changes.ops);
-                socket.to(roomId).emit("serverUpdate", changes.ops);
+                socket.to(roomId).emit("serverOpUpdate", changes.ops);
             });
         });
     });
