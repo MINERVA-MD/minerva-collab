@@ -7,7 +7,13 @@ export default function parseChanges(ch: CodeMirrorOps) {
         case "+input":
             if (ch.removed.length === 1 && ch.removed[0] === "") {
                 // if no there is no delete op
-                insert(ch.from.line, ch.from.ch, ch.text, textData);
+                insert(
+                    ch.from.line,
+                    ch.from.ch,
+                    ch.text,
+                    ch.removed.length,
+                    textData
+                );
             } else {
                 // if there is a delete op
             }
@@ -25,8 +31,12 @@ export default function parseChanges(ch: CodeMirrorOps) {
 function insert(
     line: number,
     index: number,
-    value: string[],
+    text: string[],
+    remove: number,
     content: Array<string[]>
 ) {
-    content[line];
+    text.forEach((insertData, i) => {
+        content[line].splice(index, remove, insertData);
+        console.log(content);
+    });
 }
