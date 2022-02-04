@@ -45,11 +45,22 @@ function insert(
         const returnOffset = text.length;
         const lineArray = content[line][0].split("");
         content[line] = lineArray;
-        console.log(content);
+        console.log(lineArray);
+
         const oldLine = content[line].slice(0, index);
-        const newLine = content[line].slice(index);
-        content[line] = oldLine;
-        content[line + 1] = newLine;
+        let newLine = content[line].slice(index);
+        if (newLine === undefined) {
+            newLine = [""];
+        }
+
+        content[line] = [oldLine.join("")];
+        const oldDoc = content.slice(0, line);
+        const newDoc = content.slice(line);
+
+        oldDoc.push(newLine);
+
+        // why is this backwards?
+        content = [newDoc[0], oldDoc[0]];
 
         // console.log(returnOffset);
         // if (content[line + returnOffset]) {
