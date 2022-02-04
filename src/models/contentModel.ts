@@ -49,7 +49,7 @@ function insert(
 
         const oldLine = content[line].slice(0, index);
         let newLine = content[line].slice(index);
-        if (newLine === undefined) {
+        if (newLine === undefined || newLine === []) {
             newLine = [""];
         }
 
