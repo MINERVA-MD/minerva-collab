@@ -7,7 +7,7 @@ export default function parseChanges(ch: CodeMirrorOps) {
         case "+input":
             if (ch.removed.length === 1 && ch.removed[0] === "") {
                 // if no there is no delete op
-                insert(ch.from.line, ch.from.ch, ch.text);
+                insert(ch.from.line, ch.from.ch, ch.text, textData);
             } else {
                 // if there is a delete op
             }
@@ -22,4 +22,9 @@ export default function parseChanges(ch: CodeMirrorOps) {
 }
 
 // text manipulation operations
-function insert(line: number, index: number, value: string[]) {}
+function insert(
+    line: number,
+    index: number,
+    value: string[],
+    content: Array<string[]>
+) {}
