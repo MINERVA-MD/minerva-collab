@@ -7,8 +7,8 @@ const roomId = "3265";
 roomEl.innerHTML = "room id: " + roomId;
 
 socket.emit("join", roomId);
-socket.on("joined", (msg) => {
-    console.log(msg);
+socket.on("joined", ({ data, msg }) => {
+    codeMirror.setValue(data.join("\n"));
 });
 
 // codemirror config
@@ -24,9 +24,13 @@ var codeMirror = CodeMirror(document.body, {
 let data = "";
 
 codeMirror.on("changes", (e, ch) => {
-    console.log(ch[0]);
-    const ops = ch[0];
-    socket.emit("clientUpdate", { ops });
+    if (ch[0].origin === undefined || ch[0].origin === "setValue") {
+        return;
+    } else {
+        console.log(ch[0]);
+        const ops = ch[0];
+        socket.emit("clientUpdate", { ops });
+    }
 });
 
 // switch mode between vim and default
@@ -38,13 +42,10 @@ vim.addEventListener("change", (e) => {
     }
 });
 
-// needs to be rewritten
-socket.on("update", ({ data, shift }) => {
-    const { selectionStart, selectionEnd } = editor;
-    editor.value = data;
-    editor.selectionStart = selectionStart + shift;
-    editor.selectionEnd = selectionEnd + shift;
-    console.log("update  " + data);
+// socket connection
+socket.on("serverUpdate", (data) => {
+    console.log(data);
+    codeMirror.replaceRange(data.text, data.from, data.to);
 });
 
 socket.on("welcome", (msg) => {
