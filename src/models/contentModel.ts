@@ -27,4 +27,6 @@ function insert(
     index: number,
     value: string[],
     content: Array<string[]>
-) {}
+) {
+    content[line];
+}
