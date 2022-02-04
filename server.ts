@@ -1,6 +1,5 @@
 import express from "express";
 import http from "http";
-import { Socket } from "socket.io";
 import socket from "./src/controller/socket";
 
 const port: string = process.env.PORT || "8080";

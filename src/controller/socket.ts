@@ -1,7 +1,5 @@
 import { Server, Socket } from "socket.io";
-import http from "http";
 import parseChanges from "../models/contentModel";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { CodeMirrorOps } from "../types/CodeMirrorDelta";
 
 export default function socket(io: Server) {

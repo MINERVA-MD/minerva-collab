@@ -1,4 +1,3 @@
-import { text } from "express";
 import { CodeMirrorOps } from "../types/CodeMirrorDelta";
 
 let textData: Array<string[]> = [[""]];
