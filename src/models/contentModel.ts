@@ -34,13 +34,37 @@ function insert(
     remove: number,
     content: Array<string[]>
 ) {
-    text.forEach((insertData, i) => {
+    // edits are happening on one line
+    if (text.length === 1) {
         const lineArray = content[line][0].split("");
         content[line] = lineArray;
-        content[line].splice(index, remove, insertData);
-    });
-    const lineString = content[line].join("");
-    content[line] = [lineString];
+        content[line].splice(index, remove, text[0]);
+        const lineString = content[line].join("");
+        content[line] = [lineString];
+    } else {
+        const returnOffset = text.length;
+        const lineArray = content[line][0].split("");
+        content[line] = lineArray;
+        console.log(content);
+        const oldLine = content[line].slice(0, index);
+        const newLine = content[line].slice(index);
+        content[line] = oldLine;
+        content[line + 1] = newLine;
+
+        // console.log(returnOffset);
+        // if (content[line + returnOffset]) {
+        //     // text.forEach((insertLine, i) => {
+        //     //     console.log(content);
+        //     //     const lineArray = content[line + i][0].split("");
+        //     //     content[line + i] = lineArray;
+        //     //     content[line + i].splice(index, remove, insertLine);
+        //     // });
+        // } else {
+        //     for (let i = 0; i < returnOffset; i++) {
+        //         content[line + i] = [""];
+        //     }
+        // }
+    }
     console.log(content);
 }
 
@@ -51,10 +75,10 @@ function remove(
     remove: string[],
     content: Array<string[]>
 ) {
-    remove.forEach((removeData, i) => {
+    remove.forEach((removeLine, i) => {
         const lineArray = content[line][0].split("");
         content[line] = lineArray;
-        content[line].splice(index, removeData.length);
+        content[line].splice(index, removeLine.length);
     });
     const lineString = content[line].join("");
     content[line] = [lineString];
