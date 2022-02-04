@@ -47,17 +47,19 @@ function insert(
         content[line] = lineArray;
         console.log(lineArray);
 
+        // split line on new line
         const oldLine = content[line].slice(0, index);
         let newLine = content[line].slice(index);
         if (newLine === undefined || newLine === []) {
             newLine = [""];
         }
 
+        // split doc
         content[line] = [oldLine.join("")];
         const oldDoc = content.slice(0, line);
         const newDoc = content.slice(line);
 
-        oldDoc.push(newLine);
+        oldDoc.push([newLine.join("")]);
 
         // why is this backwards?
         content = [newDoc[0], oldDoc[0]];

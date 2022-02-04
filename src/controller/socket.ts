@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import parseChanges, { setTextData, textData } from "../models/contentModel";
+import parseFunc from "../models/parse";
 import { CodeMirrorOps } from "../types/CodeMirrorDelta";
 import getBodyData from "./github";
 
@@ -26,7 +27,11 @@ export default function socket(io: Server) {
             // Position/Byte solution
             socket.on("clientUpdate", (changes: { ops: CodeMirrorOps }) => {
                 parseChanges(changes.ops);
-                socket.to(roomId).emit("serverOpUpdate", changes.ops);
+                // socket.to(roomId).emit("serverOpUpdate", {
+                //     ops: changes.ops,
+                //     html: parse(textData.join("")),
+                // });
+                console.log(parseFunc("# this is a test"));
             });
         });
     });
