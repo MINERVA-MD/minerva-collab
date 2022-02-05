@@ -54,7 +54,7 @@ socket.on("serverOpUpdate", (data) => {
     codeMirror.replaceRange(data.text, data.from, data.to);
 });
 
-socket.on("serverContentUpdate", ({ ops, html }) => {
+socket.on("serverContentUpdate", (data) => {
     codeMirror.setValue(data.join("\n"));
 });
 

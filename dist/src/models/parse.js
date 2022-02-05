@@ -1,6 +1,8 @@
 "use strict";
-// import wasm from "../pkg";
+// import { parse } from "md4rs-src";
 // export default function parseFunc(content: string) {
-//     return wasm.parse(content);
+//     const html = parse(content);
+//     console.log(html);
+//     return html;
 // }
 // console.log(parseFunc("# this is a test"));

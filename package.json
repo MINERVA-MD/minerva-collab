@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "npx ts-node-dev server.ts",
         "start": "node dist/server.js",
-        "build": "npx tsc && cp ./src/pkg/md4rs_src_bg.wasm ./dist/src/pkg/md4rs_src_bg.wasm"
+        "build": "npx tsc"
     },
     "author": "",
     "license": "ISC",
@@ -16,8 +16,7 @@
         "axios": "^0.25.0",
         "express": "^4.17.2",
         "socket.io": "^4.4.1",
-        "typescript": "^4.5.5",
-        "pkg": "file:./src/pkg"
+        "typescript": "^4.5.5"
     },
     "devDependencies": {
         "ts-node-dev": "^1.1.8"
