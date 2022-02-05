@@ -43,40 +43,37 @@ function insert(
         content[line] = [lineString];
     } else {
         const returnOffset = text.length;
-        const lineArray = content[line][0].split("");
+        let lineArray: string[];
+        if (content[line] !== undefined) {
+            lineArray = content[line][0].split("");
+        } else {
+            lineArray = [""];
+        }
         content[line] = lineArray;
-        console.log(lineArray);
+        //console.log(lineArray);
 
-        // split line on new line
+        // split to new line at index
+        console.log(line);
         const oldLine = content[line].slice(0, index);
         let newLine = content[line].slice(index);
         if (newLine === undefined || newLine === []) {
             newLine = [""];
         }
+        //console.log({ old: oldLine, new: newLine });
 
         // split doc
         content[line] = [oldLine.join("")];
-        const oldDoc = content.slice(0, line);
-        const newDoc = content.slice(line);
-
+        const oldDoc = content.slice(0, line + 1);
         oldDoc.push([newLine.join("")]);
+        console.log(content);
+        let newDoc = content.slice(line + 1);
+        //newDoc[0] !== undefined ? "" : (newDoc = [[""]]);
+
+        console.log({ part1: oldDoc, part2: newDoc });
 
         // why is this backwards?
-        content = [newDoc[0], oldDoc[0]];
 
-        // console.log(returnOffset);
-        // if (content[line + returnOffset]) {
-        //     // text.forEach((insertLine, i) => {
-        //     //     console.log(content);
-        //     //     const lineArray = content[line + i][0].split("");
-        //     //     content[line + i] = lineArray;
-        //     //     content[line + i].splice(index, remove, insertLine);
-        //     // });
-        // } else {
-        //     for (let i = 0; i < returnOffset; i++) {
-        //         content[line + i] = [""];
-        //     }
-        // }
+        content = oldDoc.concat(newDoc); // here is the problem
     }
     console.log(content);
 }
