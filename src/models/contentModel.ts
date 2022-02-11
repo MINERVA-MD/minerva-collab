@@ -3,100 +3,119 @@ import { CodeMirrorOps } from "../types/CodeMirrorDelta";
 let textData: Array<string[]> = [[""]];
 
 export default function parseChanges(ch: CodeMirrorOps) {
-  switch (ch.origin) {
-    case "+input":
-      if (ch.removed.length === 1 && ch.removed[0] === "") {
-        // if no there is no delete op
-        insert(ch.from.line, ch.from.ch, ch.text, 0, textData);
-      } else {
-        // if there is a delete op
-      }
-      break;
+    switch (ch.origin) {
+        case "+input":
+            if (ch.removed.length === 1 && ch.removed[0] === "") {
+                // if no there is no delete op
+                insert(ch.from.line, ch.from.ch, ch.text, 0, textData);
+            } else {
+                // if there is a delete op
+            }
+            break;
 
-    case "+delete":
-      remove(ch.from.line, ch.from.ch, ch.text, ch.removed, textData);
-      break;
+        case "+delete":
+            remove(
+                ch.from.line,
+                ch.from.ch,
+                ch.to.ch,
+                ch.to.line,
+                ch.text,
+                ch.removed,
+                textData
+            );
+            break;
 
-    case "paste":
+        case "paste":
 
-    case "undo":
+        case "undo":
 
-    default:
-      break;
-  }
+        default:
+            break;
+    }
 }
 
 // text manipulation operations
 function insert(
-  line: number,
-  index: number,
-  text: string[],
-  remove: number,
-  content: Array<string[]>
+    line: number,
+    retain: number,
+    text: string[],
+    remove: number,
+    content: Array<string[]>
 ) {
-  // edits are happening on one line
-  if (text.length === 1) {
-    const lineArray = content[line][0].split("");
-    content[line] = lineArray;
-    content[line].splice(index, remove, text[0]);
-    const lineString = content[line].join("");
-    content[line] = [lineString];
-  } else {
-    const returnOffset = text.length;
-    let lineArray: string[];
-    if (content[line] !== undefined) {
-      lineArray = content[line][0].split("");
+    // edits are happening on one line
+    if (text.length === 1) {
+        const lineArray = content[line][0].split("");
+        content[line] = lineArray;
+        content[line].splice(retain, remove, text[0]);
+        const lineString = content[line].join("");
+        content[line] = [lineString];
     } else {
-      lineArray = [""];
-    }
-    content[line] = lineArray;
-    //console.log(lineArray);
+        // multi-line edits
+        // breaks string at line index to be split and edited
+        let lineArray: string[];
+        if (content[line] !== undefined) {
+            lineArray = content[line][0].split("");
+        } else {
+            lineArray = [""];
+        }
+        content[line] = lineArray;
 
-    // split to new line at index
-    console.log(line);
-    const oldLine = content[line].slice(index);
-    let newLine = content[line].slice(index);
-    if (newLine === undefined || newLine === []) {
-      newLine = [""];
-    }
-    //console.log({ old: oldLine, new: newLine });
+        //split to new line at cursor index
+        const oldLine = content[line].slice(0, retain).join("");
+        let newLine = content[line].slice(retain).join("");
+        if (newLine === undefined || newLine === "") {
+            newLine = "";
+        }
+        //console.log({ old: oldLine, new: newLine });
 
-    // split doc -- try using splice
-    content[line] = [oldLine.join("")];
-    const oldDoc = content.slice(0, line);
-    oldDoc.push([newLine.join("")]);
+        // insert new line
+        for (let i = 0; i < text.length - 1; i++) {
+            const lineText = text[i];
+            console.log(lineText);
+            content.splice(line + 1, 0, [newLine]);
+            content[line] = [oldLine];
+        }
+    }
     console.log(content);
-    let newDoc = content.slice(line + 1);
-    //newDoc[0] !== undefined ? "" : (newDoc = [[""]]);
-
-    console.log({ part1: oldDoc, part2: newDoc });
-
-    // why is this backwards?
-
-    content = oldDoc.concat(newDoc); // here is the problem
-  }
-  console.log(content);
 }
 
 function remove(
-  line: number,
-  index: number,
-  text: string[],
-  remove: string[],
-  content: Array<string[]>
+    line: number,
+    retain: number,
+    index: number,
+    initLine: number,
+    text: string[],
+    remove: string[],
+    content: Array<string[]>
 ) {
-  remove.forEach((removeLine, i) => {
+    // handle single line delete
     const lineArray = content[line][0].split("");
-    content[line] = lineArray;
-    content[line].splice(index, removeLine.length);
-  });
-  const lineString = content[line].join("");
-  content[line] = [lineString];
-  console.log(content);
+
+    lineArray.splice(retain, remove[0].length);
+
+    const lineString = lineArray.join("");
+    if (lineString === undefined || lineString === "") {
+        console.log(true);
+        content.splice(line, 0);
+        console.log(content);
+    } else {
+        console.log("also here");
+        content[line] = [lineString];
+    }
+
+    // multi-line delete
+    if (line !== initLine) {
+        // set end line delete
+        const initLineArray = content[initLine][0].split("");
+        initLineArray.splice(0, index);
+        content[initLine] = [initLineArray.join("")];
+
+        console.log(content);
+    }
 }
 
 export function setTextData(data: string) {
-  textData = [data.split("\n")];
+    textData = [data.split("\n")];
 }
 
 export { textData };
