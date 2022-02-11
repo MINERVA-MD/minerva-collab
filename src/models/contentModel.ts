@@ -1,8 +1,10 @@
 import { CodeMirrorOps } from "../types/CodeMirrorDelta";
 
 let textData: Array<string[]> = [[""]];
+const opsHistory: CodeMirrorOps[] = [];
 
 export default function parseChanges(ch: CodeMirrorOps) {
+    opsHistory.push(ch);
     switch (ch.origin) {
         case "+input":
             if (ch.removed.length === 1 && ch.removed[0] === "") {
