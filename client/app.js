@@ -1,4 +1,5 @@
 import { EditorState, basicSetup, EditorView } from "@codemirror/basic-setup";
+import { sendableUpdates, receiveUpdates } from "@codemirror/collab";
 import { markdown } from "@codemirror/lang-markdown";
 
 const send = document.getElementById("send");
@@ -12,14 +13,29 @@ roomEl.innerHTML = "room id: " + roomId;
 
 socket.emit("join", roomId);
 
-// CODEMIRROR CONFIG
+// CODEMIRROR
 let view = new EditorView({
     state: EditorState.create({
-        extensions: [basicSetup, markdown()],
+        extensions: [
+            basicSetup,
+            markdown(),
+            EditorView.lineWrapping,
+            EditorView.updateListener.of((update) => {
+                setTimeout(() => {
+                    if (update.docChanged) {
+                        console.log(sendableUpdates(view.state));
+                    }
+                }, 200);
+            }),
+        ],
     }),
     parent: document.body,
 });
-console.log(view);
+console.log(view.state);
+
+EditorView.updateListener.of((update) => {
+    console.log(update);
+});
 
 // socket.emit("join", roomId);
 // socket.on("joined", ({ data, msg }) => {
