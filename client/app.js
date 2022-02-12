@@ -1,3 +1,6 @@
+import { EditorState, basicSetup, EditorView } from "@codemirror/basic-setup";
+import { markdown } from "@codemirror/lang-markdown";
+
 const send = document.getElementById("send");
 const github = document.getElementById("github");
 const roomEl = document.getElementById("roomId");
@@ -8,56 +11,35 @@ const roomId = "3265";
 roomEl.innerHTML = "room id: " + roomId;
 
 socket.emit("join", roomId);
-socket.on("joined", ({ data, msg }) => {
-    codeMirror.setValue(data.join("\n"));
-});
 
-// codemirror config
-var codeMirror = CodeMirror(document.body, {
-    lineWrapping: true,
-    lineNumbers: true,
-    keyMap: "default",
-    value: "",
-    mode: "markdown",
+// CODEMIRROR CONFIG
+let view = new EditorView({
+    state: EditorState.create({
+        extensions: [basicSetup, markdown()],
+    }),
+    parent: document.body,
 });
+console.log(view);
 
-// CodeMirror
-let data = "";
+// socket.emit("join", roomId);
+// socket.on("joined", ({ data, msg }) => {
+//     codeMirror.setValue(data.join("\n"));
+// });
 
-codeMirror.on("changes", (e, ch) => {
-    // prevent changes from triggering on content update
-    if (ch[0].origin === undefined || ch[0].origin === "setValue") {
-        return;
-    } else {
-        console.log(ch[0]);
-        const ops = ch[0];
-        socket.emit("clientUpdate", { ops });
-    }
-});
+// // fetch github content
+// github.addEventListener("click", () => {
+//     socket.emit("loadGithub");
+// });
 
-// switch mode between vim and default
-vim.addEventListener("change", (e) => {
-    if (e.target.checked) {
-        codeMirror.setOption("keyMap", "vim");
-    } else {
-        codeMirror.setOption("keyMap", "default");
-    }
-});
+// // socket connection
+// socket.on("serverOpUpdate", (data) => {
+//     codeMirror.replaceRange(data.text, data.from, data.to);
+// });
 
-// fetch github content
-github.addEventListener("click", () => {
-    socket.emit("loadGithub");
-});
+// socket.on("serverContentUpdate", (data) => {
+//     codeMirror.setValue(data.join("\n"));
+// });
 
-// socket connection
-socket.on("serverOpUpdate", (data) => {
-    codeMirror.replaceRange(data.text, data.from, data.to);
-});
-
-socket.on("serverContentUpdate", (data) => {
-    codeMirror.setValue(data.join("\n"));
-});
-
-socket.on("welcome", (msg) => {
-    console.log(msg);
-});
+// socket.on("welcome", (msg) => {
+//     console.log(msg);
+// });

@@ -1,0 +1,20 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@codemirror/basic-setup": "^0.19.1",
+    "@codemirror/commands": "^0.19.8",
+    "@codemirror/lang-markdown": "^0.19.6",
+    "@codemirror/state": "^0.19.7",
+    "@codemirror/text": "^0.19.6",
+    "@codemirror/view": "^0.19.42",
+    "codemirror": "^5.65.1"
+  }
+}
