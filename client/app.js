@@ -23,7 +23,7 @@ let view = new EditorView({
             EditorView.updateListener.of((update) => {
                 setTimeout(() => {
                     if (update.docChanged) {
-                        console.log(sendableUpdates(view.state));
+                        console.log(update.changes.toJSON());
                     }
                 }, 200);
             }),
@@ -32,10 +32,6 @@ let view = new EditorView({
     parent: document.body,
 });
 console.log(view.state);
-
-EditorView.updateListener.of((update) => {
-    console.log(update);
-});
 
 // socket.emit("join", roomId);
 // socket.on("joined", ({ data, msg }) => {
