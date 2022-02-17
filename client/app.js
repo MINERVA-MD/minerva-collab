@@ -31,27 +31,5 @@ let view = new EditorView({
     }),
     parent: document.body,
 });
+
 console.log(view.state);
-
-// socket.emit("join", roomId);
-// socket.on("joined", ({ data, msg }) => {
-//     codeMirror.setValue(data.join("\n"));
-// });
-
-// // fetch github content
-// github.addEventListener("click", () => {
-//     socket.emit("loadGithub");
-// });
-
-// // socket connection
-// socket.on("serverOpUpdate", (data) => {
-//     codeMirror.replaceRange(data.text, data.from, data.to);
-// });
-
-// socket.on("serverContentUpdate", (data) => {
-//     codeMirror.setValue(data.join("\n"));
-// });
-
-// socket.on("welcome", (msg) => {
-//     console.log(msg);
-// });
