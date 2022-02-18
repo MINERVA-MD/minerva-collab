@@ -1,5 +1,10 @@
 import { EditorState, basicSetup, EditorView } from "@codemirror/basic-setup";
-import { sendableUpdates, receiveUpdates, collab } from "@codemirror/collab";
+import {
+    sendableUpdates,
+    receiveUpdates,
+    collab,
+    getSyncedVersion,
+} from "@codemirror/collab";
 import { markdown } from "@codemirror/lang-markdown";
 import { ViewPlugin } from "@codemirror/view";
 
@@ -21,9 +26,9 @@ const state = EditorState.create({
         markdown(),
         collab(),
         EditorView.lineWrapping,
-        createClient()
+        createClient(),
     ],
-})
+});
 
 let view = new EditorView({
     state,
@@ -34,11 +39,21 @@ function createClient() {
     let plugin = ViewPlugin.define((view) => ({
         update(editorUpdate) {
             if (editorUpdate.docChanged) {
-                console.log(editorUpdate.changes)
+                const updates = sendableUpdates(view.state).map((u) => {
+                    return {
+                        updateJSON: u.changes.toJSON(),
+                        clientID: u.clientID,
+                    };
+                });
+                console.log(sendableUpdates(view.state));
+                socket.emit("clientOpUpdate", {
+                    version: getSyncedVersion(view.state),
+                    updates,
+                });
             }
-        }
-    }))
+        },
+    }));
     return plugin;
 }
 
-console.log(view.state);
+//socket.on('serverOpUpdate', ())
