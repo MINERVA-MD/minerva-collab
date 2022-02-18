@@ -1,8 +1,7 @@
 import { ChangeSet } from "@codemirror/state";
 import { Server, Socket } from "socket.io";
 import DocumentAuthority from "../models/contentModel";
-//import parseFunc from "../models/parse";
-import { ClientChanges, CodeMirrorOps } from "../types/CodeMirror";
+import { ClientChanges } from "../types/CodeMirror";
 import getBodyData from "./github";
 
 const document = new DocumentAuthority(undefined);
@@ -31,7 +30,6 @@ export default function socket(io: Server) {
             // Position/Byte solution
             socket.on("clientOpUpdate", (changes: ClientChanges) => {
                 document.receiveUpdates(changes, io, roomId);
-                //` socket.to(roomId).emit("serverOpUpdate", changes);
             });
         });
     });

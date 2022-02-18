@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="node_modules/codemirror/lib/codemirror.css"
+        />
+        <link rel="stylesheet" href="./style.css" />
+        <!-- <script src="https://text-sockets.herokuapp.com/socket.io/socket.io.js"></script> -->
+        <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+        <script type="module" src="./app.js" defer></script>
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="node_modules/codemirror/lib/codemirror.css" />
-    <link rel="stylesheet" href="./style.css" />
-    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
-    <script type="module" src="./app.js" defer></script>
-</head>
-
-<body>
-    <h3>I'm a 🌮</h3>
-    <button type="button" id="github">Load Github Repo</button>
-    <div style="display: flex; justify-content: space-between">
-        <div id="roomId"></div>
-        <div>
-            <label for="toggleVim">Toggle Vim Mode</label>
-            <input type="checkbox" id="toggleVim" value="vim" />
+    <body>
+        <h3>I'm a 🌮</h3>
+        <button type="button" id="github">Load Github Repo</button>
+        <div style="display: flex; justify-content: space-between">
+            <div id="roomId"></div>
+            <div>
+                <label for="toggleVim">Toggle Vim Mode</label>
+                <input type="checkbox" id="toggleVim" value="vim" />
+            </div>
         </div>
-    </div>
-    <!-- <div style="height: 85vh; margin: 0px">
+        <!-- <div style="height: 85vh; margin: 0px">
             <textarea
                 style="
                     font-size: 1.2rem;
@@ -35,6 +38,5 @@
                 id="editor"
             ></textarea>
         </div> -->
-</body>
-
+    </body>
 </html>

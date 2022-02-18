@@ -7,7 +7,7 @@ import {
 } from "@codemirror/collab";
 import { markdown } from "@codemirror/lang-markdown";
 import { Text } from "@codemirror/text";
-import { ViewPlugin } from "@codemirror/view";
+import { ViewPlugin, drawSelection } from "@codemirror/view";
 import { ChangeSet } from "@codemirror/state";
 
 const send = document.getElementById("send");
@@ -15,7 +15,9 @@ const github = document.getElementById("github");
 const roomEl = document.getElementById("roomId");
 const vim = document.getElementById("toggleVim");
 
+//const socket = io("https://text-sockets.herokuapp.com/");
 const socket = io("http://localhost:8080/");
+
 const roomId = "3265";
 roomEl.innerHTML = "room id: " + roomId;
 
@@ -32,7 +34,7 @@ socket.on("joined", (documentData) => {
             markdown(),
             collab({ startVersion: updates.length }),
             EditorView.lineWrapping,
-            createClient(updates.length, doc),
+            editorClient(updates.length, doc),
         ],
     });
 
@@ -41,9 +43,12 @@ socket.on("joined", (documentData) => {
         parent: document.body,
     });
 
-    function createClient(version, doc) {
+    function editorClient(version, doc) {
         let plugin = ViewPlugin.define((view) => ({
             update(editorUpdate) {
+                if (editorUpdate.selectionSet) {
+                    console.log(view.state.selection.ranges);
+                }
                 if (editorUpdate.docChanged) {
                     const unsentUpdates = sendableUpdates(view.state).map(
                         (u) => {

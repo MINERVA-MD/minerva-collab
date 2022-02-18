@@ -4,10 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest",
         "dev": "npx ts-node-dev server.ts",
         "start": "node dist/server.js",
-        "build": "npx tsc",
+        "build": "npx tsc -p tsconfig.build.json",
         "client": "parcel ./client/index.html"
     },
     "author": "",
@@ -23,6 +23,9 @@
         "typescript": "^4.5.5"
     },
     "devDependencies": {
+        "@types/jest": "^27.4.0",
+        "jest": "^27.5.1",
+        "ts-jest": "^27.1.3",
         "ts-node-dev": "^1.1.8"
     }
 }
