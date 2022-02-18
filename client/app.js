@@ -1,6 +1,7 @@
 import { EditorState, basicSetup, EditorView } from "@codemirror/basic-setup";
-import { sendableUpdates, receiveUpdates } from "@codemirror/collab";
+import { sendableUpdates, receiveUpdates, collab } from "@codemirror/collab";
 import { markdown } from "@codemirror/lang-markdown";
+import { ViewPlugin } from "@codemirror/view";
 
 const send = document.getElementById("send");
 const github = document.getElementById("github");
@@ -14,22 +15,30 @@ roomEl.innerHTML = "room id: " + roomId;
 socket.emit("join", roomId);
 
 // CODEMIRROR
+const state = EditorState.create({
+    extensions: [
+        basicSetup,
+        markdown(),
+        collab(),
+        EditorView.lineWrapping,
+        createClient()
+    ],
+})
+
 let view = new EditorView({
-    state: EditorState.create({
-        extensions: [
-            basicSetup,
-            markdown(),
-            EditorView.lineWrapping,
-            EditorView.updateListener.of((update) => {
-                setTimeout(() => {
-                    if (update.docChanged) {
-                        console.log(update.changes.toJSON());
-                    }
-                }, 200);
-            }),
-        ],
-    }),
+    state,
     parent: document.body,
 });
+
+function createClient() {
+    let plugin = ViewPlugin.define((view) => ({
+        update(editorUpdate) {
+            if (editorUpdate.docChanged) {
+                console.log(editorUpdate.changes)
+            }
+        }
+    }))
+    return plugin;
+}
 
 console.log(view.state);
