@@ -14,6 +14,8 @@ export default function socket(io: Server) {
         socket.on("join", (roomId) => {
             socket.join(roomId);
             socket.emit("joined", {
+                doc: document.doc,
+                updates: document.getUpdates(),
                 msg: `joined room ${roomId}`,
             });
 
@@ -28,8 +30,8 @@ export default function socket(io: Server) {
 
             // Position/Byte solution
             socket.on("clientOpUpdate", (changes: ClientChanges) => {
-                document.receiveUpdates(changes, socket);
-                socket.to(roomId).emit("serverOpUpdate", changes);
+                document.receiveUpdates(changes, io, roomId);
+                //` socket.to(roomId).emit("serverOpUpdate", changes);
             });
         });
     });

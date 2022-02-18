@@ -1,7 +1,7 @@
 import { ChangeSet, Text } from "@codemirror/state";
 import { Update } from "@codemirror/collab";
 import { ClientChanges } from "../types/CodeMirror";
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 export default class DocumentAuthority {
     doc: Text;
@@ -11,8 +11,11 @@ export default class DocumentAuthority {
         this.doc = Text.of(initDoc);
     }
 
-    public receiveUpdates(changes: ClientChanges, connection: Socket) {
-        console.log(this._updates.length);
+    public receiveUpdates(
+        changes: ClientChanges,
+        connection: Server,
+        roomId: string
+    ) {
         if (changes.version !== this._updates.length) {
             return;
         } else if (changes.version === this._updates.length) {
@@ -24,12 +27,19 @@ export default class DocumentAuthority {
                 });
                 this.doc = deserializedUpdate.apply(this.doc);
             });
-            //console.log(this._updates.length);
-            this.sendUpdates(changes, connection);
+            this.sendUpdates(changes, connection, roomId);
         }
     }
 
-    sendUpdates(changes: ClientChanges, connection: Socket) {
-        //this.connection.emit('serverOpUpdate', (version: ))
+    sendUpdates(changes: ClientChanges, connection: Server, roomId: string) {
+        console.log(this.doc);
+        connection.to(roomId).emit("serverOpUpdate", {
+            version: changes.version,
+            updates: changes.updates,
+        });
+    }
+
+    getUpdates() {
+        return this._updates;
     }
 }
