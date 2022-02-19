@@ -32,6 +32,5 @@ export default function socket(io: Server) {
                 document.receiveUpdates(changes, io, roomId);
             });
         });
-        return socket;
     });
 }

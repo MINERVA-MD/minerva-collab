@@ -4,10 +4,11 @@ import { ChangeSet } from "@codemirror/state";
 
 import { ClientChanges } from "../src/types/CodeMirror";
 import DocumentAuthority from "../src/models/contentModel";
-import Client from "socket.io-client";
+import * as client from "socket.io-client";
 import { io } from "../server";
 import socket from "../src/controller/socket";
 import { Server, Socket } from "socket.io";
+import getBodyData from "../src/controller/github";
 
 // TESTS
 describe("Initializing new document authority", () => {
@@ -34,6 +35,41 @@ describe("Initialize document authority with existing data", () => {
     });
 });
 
+describe("Passing changes to Document Authority", () => {
+    let doc: DocumentAuthority;
+    let clientChanges: ClientChanges;
+    let socket: client.Socket;
+
+    beforeAll(() => {
+        const d: { doc: DocumentAuthority; updates: Update[] } =
+            mockDocumentAuthority();
+        const { updates } = mockDocumentAuthority();
+        doc = d.doc;
+
+        clientChanges = {
+            version: updates.length,
+            updates: [
+                {
+                    updateJSON: [3, [0, "j"]],
+                    clientID: "ci9k21",
+                },
+            ],
+        };
+
+        mockSocketServer();
+        socket = mockClient();
+    });
+    afterAll(() => {
+        io.close();
+        socket.close();
+    });
+
+    test("Insert 'j' at end of the line", () => {
+        doc.receiveUpdates(clientChanges, io, "0000");
+        expect(doc.doc).toEqual(Text.of(["sdfj"]));
+    });
+});
+
 // HELPERS
 function mockDocumentAuthority(
     mockument: string[] = ["sdf"],
@@ -55,4 +91,13 @@ function mockDocumentAuthority(
         mockument,
         serializedChanges,
     };
+}
+
+function mockSocketServer() {
+    socket(io);
+}
+
+function mockClient() {
+    const socket = client.io("http://localhost:8080/");
+    return socket;
 }
