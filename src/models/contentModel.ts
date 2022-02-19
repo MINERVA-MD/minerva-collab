@@ -7,8 +7,9 @@ export default class DocumentAuthority {
     doc: Text;
     private _updates: Update[] = [];
 
-    constructor(initDoc: string[] = [""]) {
+    constructor(initDoc: string[] = [""], updates?: Update[]) {
         this.doc = Text.of(initDoc);
+        if (updates) this._updates = updates;
     }
 
     public receiveUpdates(
@@ -32,7 +33,7 @@ export default class DocumentAuthority {
     }
 
     sendUpdates(changes: ClientChanges, connection: Server, roomId: string) {
-        console.log(this.doc);
+        console.log(changes.updates);
         connection.to(roomId).emit("serverOpUpdate", {
             version: changes.version,
             updates: changes.updates,
