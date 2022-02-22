@@ -6,7 +6,7 @@ Start by installing the necessary dependencies
 npm i
 ```
 
-To start the server run the following command:
+To start the server, run the following command:
 
 ```
 npm run dev
