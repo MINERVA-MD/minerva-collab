@@ -64,6 +64,7 @@ describe("Passing client changes to Document Authority", () => {
         };
         doc.receiveUpdates(clientChanges, io, "0000");
         expect(doc.doc).toEqual(Text.of(["sdfj"]));
+        expect(doc.getUpdates().length).toBe(4);
     });
 
     test("Delete character at index 3 end of the line", () => {
@@ -78,6 +79,7 @@ describe("Passing client changes to Document Authority", () => {
         };
         doc.receiveUpdates(clientChanges, io, "0000");
         expect(doc.doc).toEqual(Text.of(["sdf"]));
+        expect(doc.getUpdates().length).toBe(5);
     });
 
     test("Delete three characters at index 2 and insert 'hello'", () => {
@@ -92,6 +94,7 @@ describe("Passing client changes to Document Authority", () => {
         };
         doc.receiveUpdates(clientChanges, io, "0000");
         expect(doc.doc).toEqual(Text.of(["hello"]));
+        expect(doc.getUpdates().length).toBe(6);
     });
 
     test("Split to new line at index 3", () => {
@@ -106,22 +109,8 @@ describe("Passing client changes to Document Authority", () => {
         };
         doc.receiveUpdates(clientChanges, io, "0000");
         expect(doc.doc).toEqual(Text.of(["hel", "lo"]));
+        expect(doc.getUpdates().length).toBe(7);
     });
-});
-
-describe("Socket connections", () => {
-    /* 
-        when a client connects to a room with a document,
-        initialize a doc with that state (create room event)
-    */
-    // test("Client join a new room", () => {
-    //     socket.emit("join", "0001");
-    //     let fetchedDoc;
-    //     socket.on("joined", (documentData) => {
-    //         fetchedDoc = documentData.doc;
-    //     });
-    //     expect(fetchedDoc).toEqual(Text.of([""]));
-    // });
 });
 
 // HELPERS
