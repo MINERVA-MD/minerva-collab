@@ -35,26 +35,14 @@ describe("Initialize document authority with existing data", () => {
     });
 });
 
-describe("Passing changes to Document Authority", () => {
+describe("Passing client changes to Document Authority", () => {
     let doc: DocumentAuthority;
-    let clientChanges: ClientChanges;
     let socket: client.Socket;
 
     beforeAll(() => {
         const d: { doc: DocumentAuthority; updates: Update[] } =
             mockDocumentAuthority();
-        const { updates } = mockDocumentAuthority();
         doc = d.doc;
-
-        clientChanges = {
-            version: updates.length,
-            updates: [
-                {
-                    updateJSON: [3, [0, "j"]],
-                    clientID: "ci9k21",
-                },
-            ],
-        };
 
         mockSocketServer();
         socket = mockClient();
@@ -65,12 +53,79 @@ describe("Passing changes to Document Authority", () => {
     });
 
     test("Insert 'j' at end of the line", () => {
+        let clientChanges = {
+            version: doc.getUpdates().length,
+            updates: [
+                {
+                    updateJSON: [3, [0, "j"]],
+                    clientID: "ci9k21",
+                },
+            ],
+        };
         doc.receiveUpdates(clientChanges, io, "0000");
         expect(doc.doc).toEqual(Text.of(["sdfj"]));
     });
+
+    test("Delete character at index 3 end of the line", () => {
+        let clientChanges = {
+            version: doc.getUpdates().length,
+            updates: [
+                {
+                    updateJSON: [3, [1]],
+                    clientID: "ci9k21",
+                },
+            ],
+        };
+        doc.receiveUpdates(clientChanges, io, "0000");
+        expect(doc.doc).toEqual(Text.of(["sdf"]));
+    });
+
+    test("Delete three characters at index 2 and insert 'hello'", () => {
+        let clientChanges = {
+            version: doc.getUpdates().length,
+            updates: [
+                {
+                    updateJSON: [[3, "hello"]],
+                    clientID: "ci9k21",
+                },
+            ],
+        };
+        doc.receiveUpdates(clientChanges, io, "0000");
+        expect(doc.doc).toEqual(Text.of(["hello"]));
+    });
+
+    test("Split to new line at index 3", () => {
+        let clientChanges = {
+            version: doc.getUpdates().length,
+            updates: [
+                {
+                    updateJSON: [3, [0, "", ""], 2],
+                    clientID: "ci9k21",
+                },
+            ],
+        };
+        doc.receiveUpdates(clientChanges, io, "0000");
+        expect(doc.doc).toEqual(Text.of(["hel", "lo"]));
+    });
+});
+
+describe("Socket connections", () => {
+    /* 
+        when a client connects to a room with a document,
+        initialize a doc with that state (create room event)
+    */
+    // test("Client join a new room", () => {
+    //     socket.emit("join", "0001");
+    //     let fetchedDoc;
+    //     socket.on("joined", (documentData) => {
+    //         fetchedDoc = documentData.doc;
+    //     });
+    //     expect(fetchedDoc).toEqual(Text.of([""]));
+    // });
 });
 
 // HELPERS
+// mocks a document with a starting value and update history
 function mockDocumentAuthority(
     mockument: string[] = ["sdf"],
     serializedChanges: any = [[[0, "s"]], [1, [0, "d"]], [2, [0, "f"]]]

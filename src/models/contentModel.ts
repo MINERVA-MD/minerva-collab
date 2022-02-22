@@ -21,6 +21,7 @@ export default class DocumentAuthority {
             return;
         } else if (changes.version === this._updates.length) {
             changes.updates.forEach((u) => {
+                console.log(u.updateJSON);
                 const deserializedUpdate = ChangeSet.fromJSON(u.updateJSON);
                 this._updates.push({
                     changes: deserializedUpdate,
@@ -33,7 +34,6 @@ export default class DocumentAuthority {
     }
 
     sendUpdates(changes: ClientChanges, connection: Server, roomId: string) {
-        console.log(changes.updates);
         connection.to(roomId).emit("serverOpUpdate", {
             version: changes.version,
             updates: changes.updates,

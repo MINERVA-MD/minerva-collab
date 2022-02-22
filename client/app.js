@@ -46,9 +46,6 @@ socket.on("joined", (documentData) => {
     function editorClient(version, doc) {
         let plugin = ViewPlugin.define((view) => ({
             update(editorUpdate) {
-                if (editorUpdate.selectionSet) {
-                    console.log(view.state.selection.ranges);
-                }
                 if (editorUpdate.docChanged) {
                     const unsentUpdates = sendableUpdates(view.state).map(
                         (u) => {
