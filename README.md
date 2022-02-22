@@ -1,4 +1,4 @@
-# Minerva Collaboration Servertest
+# Minerva Collaboration Server
 
 Start by installing the necessary dependencies
 
