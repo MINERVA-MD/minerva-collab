@@ -1,6 +1,9 @@
 # Minerva Collaboration Server
+✏️ A socket server using the codemirror 6 collab library, allowing for real-time collaborative document editing. 
 
-Start by installing the necessary dependencies
+## Getting Started
+
+Install the necessary npm packages:
 
 ```
 npm i
