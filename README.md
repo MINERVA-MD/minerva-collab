@@ -1,4 +1,4 @@
-# Minerva Collaboration Server
+# Minerva Collaboration Servertest
 
 Start by installing the necessary dependencies
 
@@ -18,11 +18,15 @@ This repo comes with a barebones client to test the server and provide an exampl
 cd client
 npm i
 ```
-You can start the project in the **client** root with: 
+
+You can start the project in the **client** root with:
+
 ```
 parcel index.html
 ```
-or from the **project** root with: 
+
+or from the **project** root with:
+
 ```
 npm run client
 ```
