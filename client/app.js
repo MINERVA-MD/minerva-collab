@@ -15,8 +15,8 @@ const github = document.getElementById("github");
 const roomEl = document.getElementById("roomId");
 const vim = document.getElementById("toggleVim");
 
-//const socket = io("https://text-sockets.herokuapp.com/");
-const socket = io("http://localhost:8080/");
+const socket = io("https://text-sockets.herokuapp.com/");
+// const socket = io("http://localhost:8080/");
 
 const roomId = "3265";
 roomEl.innerHTML = "room id: " + roomId;

@@ -1,5 +1,4 @@
 import { EditorState } from "@codemirror/state";
-console.log(EditorState);
 import CodeMirror from "codemirror";
 import "codemirror/mode/markdown/markdown";
 import "codemirror/keymap/vim";
@@ -35,7 +34,6 @@ codeMirror.on("changes", (e, ch) => {
     if (ch[0].origin === undefined || ch[0].origin === "setValue") {
         return;
     } else {
-        console.log(ch[0]);
         const ops = ch[0];
         socket.emit("clientUpdate", { ops });
     }

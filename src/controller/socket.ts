@@ -56,7 +56,6 @@ export default function socket(io: Server) {
 
             // Position/Byte solution
             socket.on("clientOpUpdate", (changes: ClientChanges) => {
-                console.log(changes);
                 document.receiveUpdates(changes, io, roomId);
             });
         });
