@@ -17,23 +17,20 @@ export default class DocumentAuthority {
         connection: Server,
         roomId: string
     ) {
-        if (changes.version !== this._updates.length) {
-            return;
-        } else if (changes.version === this._updates.length) {
-            changes.updates.forEach((u) => {
-                console.log(u.updateJSON);
-                const deserializedUpdate = ChangeSet.fromJSON(u.updateJSON);
-                this._updates.push({
-                    changes: deserializedUpdate,
-                    clientID: u.clientID,
-                });
-                this.doc = deserializedUpdate.apply(this.doc);
+        changes.updates.forEach((u) => {
+            console.log(u.updateJSON);
+            const deserializedUpdate = ChangeSet.fromJSON(u.updateJSON);
+            this._updates.push({
+                changes: deserializedUpdate,
+                clientID: u.clientID,
             });
-            this.sendUpdates(changes, connection, roomId);
-        }
+            this.doc = deserializedUpdate.apply(this.doc);
+        });
+        this.sendUpdates(changes, connection, roomId);
     }
 
     sendUpdates(changes: ClientChanges, connection: Server, roomId: string) {
+        console.log(this.getUpdates());
         connection.to(roomId).emit("serverOpUpdate", {
             version: changes.version,
             updates: changes.updates,
