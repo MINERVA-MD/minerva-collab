@@ -18,9 +18,7 @@ export default class DocumentAuthority {
         roomId: string
     ) {
         console.log(
-            `new: ${changes.updates.length} current: ${
-                this.getUpdates().length
-            }`
+            `inc V: ${changes.version} cur V: ${this.getUpdates().length}`
         );
         if (this.getUpdates().length === changes.version) {
             changes.updates.forEach((u) => {
@@ -34,7 +32,7 @@ export default class DocumentAuthority {
             });
             this.sendUpdates(changes, connection, roomId);
         } else {
-            console.log("does not match");
+            console.log("version mismatch");
         }
     }
 
