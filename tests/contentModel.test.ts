@@ -3,6 +3,8 @@ import { Text } from "@codemirror/text";
 import { ChangeSet } from "@codemirror/state";
 
 import { ClientChanges } from "../src/types/CodeMirror";
+import express from "express";
+import http from "http";
 import DocumentAuthority from "../src/models/contentModel";
 import * as client from "socket.io-client";
 import { io } from "../server";
@@ -37,19 +39,14 @@ describe("Initialize document authority with existing data", () => {
 
 describe("Passing client changes to Document Authority", () => {
     let doc: DocumentAuthority;
-    let socket: client.Socket;
 
     beforeAll(() => {
         const d: { doc: DocumentAuthority; updates: Update[] } =
             mockDocumentAuthority();
         doc = d.doc;
-
-        mockSocketServer();
-        socket = mockClient();
     });
     afterAll(() => {
         io.close();
-        socket.close();
     });
 
     test("Insert 'j' at end of the line", () => {
@@ -113,6 +110,53 @@ describe("Passing client changes to Document Authority", () => {
     });
 });
 
+describe("Sending and receiving via sockets", () => {
+    let doc: DocumentAuthority;
+    let clientSocket: client.Socket;
+    let serveIo: Server;
+    let server: http.Server;
+
+    beforeAll((done) => {
+        // create server
+        const port: string = "8080";
+        const app: express.Application = express();
+        server = http.createServer(app);
+        serveIo = require("socket.io")(server, {
+            cors: {
+                origin: "*",
+                methods: ["GET", "POST"],
+            },
+        });
+        server.listen(port, () => {
+            console.log(`Listening on http://localhost:${port}`);
+            done();
+        });
+        socket(serveIo);
+
+        const d: { doc: DocumentAuthority; updates: Update[] } =
+            mockDocumentAuthority();
+        doc = d.doc;
+
+        clientSocket = mockClient();
+
+        clientSocket.on("welcome", (msg) => {
+            console.log(msg);
+            done();
+        });
+    });
+    afterAll(() => {
+        serveIo.close();
+        clientSocket.close();
+    });
+
+    test("Establishing a socket connection", (done) => {
+        clientSocket.on("connected", (id) => {
+            expect(id).toBe(clientSocket.id);
+            done();
+        });
+    });
+});
+
 // HELPERS
 // mocks a document with a starting value and update history
 function mockDocumentAuthority(
@@ -137,9 +181,9 @@ function mockDocumentAuthority(
     };
 }
 
-function mockSocketServer() {
-    socket(io);
-}
+// function mockSocketServer() {
+//     socket(io);
+// }
 
 function mockClient() {
     const socket = client.io("http://localhost:8080/");

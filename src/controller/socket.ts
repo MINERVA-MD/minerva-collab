@@ -8,7 +8,7 @@ let documents: { [key: string]: DocumentAuthority } = {};
 
 export default function socket(io: Server) {
     io.on("connection", (socket: Socket) => {
-        socket.emit("welcome", `Welcome ${socket.id}`);
+        socket.emit("connected", socket.id);
 
         socket.on("create", ({ roomId, documentData }) => {
             console.log("room created " + roomId);
@@ -32,7 +32,6 @@ export default function socket(io: Server) {
         });
 
         socket.on("join", (roomId) => {
-            console.log("joined");
             let document: DocumentAuthority;
             if (documents[roomId]) {
                 document = documents[roomId];
@@ -44,6 +43,7 @@ export default function socket(io: Server) {
                 doc: document.doc,
                 updates: document.getUpdates(),
                 msg: `joined room ${roomId}`,
+                test: console.log("emitted"),
             });
             console.log(document.doc);
 
