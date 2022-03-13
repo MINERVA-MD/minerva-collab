@@ -155,6 +155,17 @@ describe("Sending and receiving via sockets", () => {
             done();
         });
     });
+
+    test("Create a new room", (done) => {
+        clientSocket.emit("create", {
+            roomId: "0000",
+            documentData: { doc: Text.of([""]), updates: [] },
+        });
+        clientSocket.on("created", (res) => {
+            expect(res).toEqual({ doc: [""], updates: [] });
+            done();
+        });
+    });
 });
 
 // HELPERS

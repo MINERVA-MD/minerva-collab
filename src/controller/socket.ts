@@ -10,9 +10,13 @@ export default function socket(io: Server) {
     io.on("connection", (socket: Socket) => {
         socket.emit("connected", socket.id);
 
-        socket.on("create", ({ roomId, documentData }) => {
-            console.log("room created " + roomId);
-            socket.join(roomId);
+        socket.on("create", async ({ roomId, documentData }) => {
+            try {
+                await socket.join(roomId);
+            } catch (error) {
+                console.log(error);
+            }
+
             const document = new DocumentAuthority(
                 documentData.doc,
                 documentData.updates
@@ -36,6 +40,7 @@ export default function socket(io: Server) {
             if (documents[roomId]) {
                 document = documents[roomId];
             } else {
+                console.log("room does not exist");
                 return;
             }
             socket.join(roomId);
