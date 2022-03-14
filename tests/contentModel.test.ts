@@ -136,22 +136,29 @@ describe("Sending and receiving via sockets", () => {
         const d: { doc: DocumentAuthority; updates: Update[] } =
             mockDocumentAuthority();
         doc = d.doc;
-
-        clientSocket = mockClient();
-
-        clientSocket.on("welcome", (msg) => {
-            console.log(msg);
-            done();
-        });
     });
     afterAll(() => {
         serveIo.close();
+    });
+    beforeEach(() => {
+        clientSocket = mockClient();
+    });
+    afterEach(() => {
         clientSocket.close();
     });
 
     test("Establishing a socket connection", (done) => {
         clientSocket.on("connected", (id) => {
             expect(id).toBe(clientSocket.id);
+            done();
+        });
+    });
+
+    test("Join room that does not exist", (done) => {
+        const room = "1111";
+        clientSocket.emit("join", room);
+        clientSocket.on("joined", (res) => {
+            expect(res.msg).toBe("room does not exist");
             done();
         });
     });
@@ -163,6 +170,49 @@ describe("Sending and receiving via sockets", () => {
         });
         clientSocket.on("created", (res) => {
             expect(res).toEqual({ doc: [""], updates: [] });
+            done();
+        });
+    });
+
+    test("Join existing room", (done) => {
+        const room = "0000";
+        clientSocket.emit("join", room);
+        clientSocket.on("joined", (res) => {
+            expect(res.msg).toBe("joined room " + room);
+            done();
+        });
+    });
+
+    test("Client 2 receives updates from client 1 [insert 'a' at position 0]", (done) => {
+        let client2 = mockClient();
+
+        clientSocket.emit("create", {
+            roomId: "0000",
+            documentData: { doc: Text.of([""]), updates: [] },
+        });
+        clientSocket.emit("join", "0000");
+        client2.emit("join", "0000");
+
+        client2.emit("clientOpUpdate", {
+            version: 0,
+            updates: [
+                {
+                    updateJSON: [[0, "a"]],
+                    clientID: "ci9k21",
+                },
+            ],
+        });
+        clientSocket.on("serverOpUpdate", (data) => {
+            expect(data).toEqual({
+                version: 0,
+                updates: [
+                    {
+                        updateJSON: [[0, "a"]],
+                        clientID: "ci9k21",
+                    },
+                ],
+            });
+            client2.close();
             done();
         });
     });

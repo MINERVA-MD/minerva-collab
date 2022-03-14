@@ -17,9 +17,6 @@ export default class DocumentAuthority {
         connection: Server,
         roomId: string
     ) {
-        console.log(
-            `inc V: ${changes.version} cur V: ${this.getUpdates().length}`
-        );
         if (this.getUpdates().length === changes.version) {
             changes.updates.forEach((u) => {
                 const deserializedUpdate = ChangeSet.fromJSON(u.updateJSON);
