@@ -1,5 +1,5 @@
 # Minerva Collaboration Server
-✏️ A socket server using the codemirror 6 collab library, allowing for real-time collaborative document editing. 
+✏️ A socket server extending the codemirror 6 collab library, allowing for real-time collaborative document editing. 
 
 ## Getting Started
 
